@@ -56,5 +56,4 @@
   "jest": {
     "testEnvironment": "jsdom"
   }
-
 }
