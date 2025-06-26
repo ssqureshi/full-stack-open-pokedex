@@ -38,6 +38,22 @@ jobs:
         if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}   
         run: 
           curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+      - name: Test Success
+        uses: rjstone/discord-webhook-notify@9a20ac02515f8dc588cfe571ca05f000008edf29
+        if: success()
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          severity: info
+          details: All tests passed!
+      - name: Text Failed
+        uses: rjstone/discord-webhook-notify@9a20ac02515f8dc588cfe571ca05f000008edf29
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          username: ssqureshi
+          severity: error
+          color: #ff3333
+          text: |
+             This commit by ${{ github.event.commits[0].url }} by ${{ github.event.commits[0].author.name }} failed   
 
   tag_release:
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
@@ -51,7 +67,7 @@ jobs:
         ref: ${{ github.event.pull_request.merge_commit_sha }}
         fetch-depth: '0'
     - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.73.0
+      uses: anothrNick/github-tag-action@22dbe23ff453e3ea2727a3d37aaf02587da59ea2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEFAULT_BUMP : patch
