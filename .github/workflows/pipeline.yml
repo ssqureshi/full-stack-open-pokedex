@@ -47,7 +47,7 @@ jobs:
           details: All tests passed!
       - name: Text Failed
         uses: rjstone/discord-webhook-notify@9a20ac02515f8dc588cfe571ca05f000008edf29
-        if: ${{ !success() && github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+        if: ${{ !success() }}
         with:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
           username: ssqureshi
